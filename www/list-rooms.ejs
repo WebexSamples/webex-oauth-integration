@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>OAuth Integration</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
+
+<body>
+  <div id="content">
+    <a href="/logout">Logout</a>
+    <h1>Webex Integration example: Spaces List</h1>
+    <p>Here are your latest active spaces:</p>
+    <ul>
+      <% rooms.forEach(function(room) { %>
+        <li>
+          <%= room.title %>
+        </li>
+        <% }); %>
+    </ul>
+
+  </div>
+</body>
+
+</html>
