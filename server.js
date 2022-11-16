@@ -1,15 +1,9 @@
 /*
  * A Webex Integration based on Node.js that initiates an OAuth authorization
  * to finally obtain an API access to make Webex REST API calls on the authenticating user's behalf.
- *
- * You'll first need to create an OAuth integration at https://developer.webex.com/my-apps/new/integration
- * The integration should have the following settings:
- *
- *    * Redirect URI: http://localhost:8080
- *    * Scopes: spark:people_read
- *
- * See the [Integrations](https://developer.webex.com/docs/integrations) documentation
- * for more information.
+ * 
+ * See the [accompanying tutorial](https://developer.webex.com/docs/run-an-oauth-integration) on the 
+ * Webex Developer Portal for instructions for how to configure and run the project.
  */
 
 require("dotenv").config();
@@ -20,7 +14,7 @@ var session = require("express-session");
 const app = express();
 const crypto = require("crypto");
 
-// Variable session containing API access token
+// Session variable that contains API access token
 var ssn;
 
 // Enable session middleware for storing API access tokens
@@ -34,38 +28,31 @@ app.use(
 
 // Create the authorization URL that opens when the user clicks
 // 'Start Login'. The base URL is copied from your integration's configuration page
-// on the Developer Portal. The following code concatenates the base URL with a
+// on the Developer Portal and added to .env as an envioronment variable.
+
+// The following code concatenates the base URL with a
 // value for the `state` parameter at the end of the URL.
 
-const state = process.env.STATE || crypto.randomBytes(64).toString("hex");
 const initiateURL = new URL(process.env.AUTH_INIT_URL);
-
-// Extract client ID, redirect URI, and scopes from authorization URL
-// Set new value for 'state` query parameter
 var authUrlParams = initiateURL.searchParams;
-authUrlParams.set("state", state);
-initiateURL.searchParams = authUrlParams;
 const clientId = authUrlParams.get("client_id");
 const redirectURI = authUrlParams.get("redirect_uri");
 const scopes = authUrlParams.get("scope");
+
+// Extract client ID, redirect URI, and scopes from authorization URL
+// Set new value for initial URL's 'state` query parameter
+const state = process.env.STATE || crypto.randomBytes(64).toString("hex");
+authUrlParams.set("state", state);
+initiateURL.searchParams = authUrlParams;
 
 // Read client secret and port number from environment
 const clientSecret = process.env.CLIENT_SECRET;
 const port = process.env.PORT || 8080;
 
-// Check for missing configuration variables
-//
-if (!clientId || !clientSecret || !redirectURI) {
-  console.log(
-    "Could not parse at least one of client ID, client secret, or redirect URI. See README.md for app usage."
-  );
-  return;
-}
-
 // Output Oauth client settings to console
 //
 debug(
-  `OAuth integration settings:\n   - CLIENT_ID    : ${clientId}\n   - REDIRECT_URI : ${redirectURI}\n   - SCOPES       : ${scopes}`
+  `OAuth integration settings:\n - CLIENT_ID : ${clientId}\n - REDIRECT_URI : ${redirectURI}\n - SCOPES : ${scopes}`
 );
 
 // Compile initiateURL into index.ejs template, which contains a placeholder
