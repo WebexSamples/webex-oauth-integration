@@ -28,7 +28,7 @@ app.use(
 
 // Create the authorization URL that opens when the user clicks
 // 'Start Login'. The base URL is copied from your integration's configuration page
-// on the Developer Portal and added to .env as an envioronment variable.
+// on the Developer Portal and added to .env as an environment variable.
 
 // The following code concatenates the base URL with a
 // value for the `state` parameter at the end of the URL.
