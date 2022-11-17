@@ -64,10 +64,8 @@ const str = read(join(__dirname, "/www/index.ejs"), "utf8");
 const ejs = require("ejs");
 const compiled = ejs.compile(str)({ link: initiateURL }); // inject the link into the template
 
-
 // Express routes
 app.get("/index.html", function (req, res) {
-
   // Check if the session contain a token. If so, redirect to the compiled display-name.ejs template.
   var token = req.session.token;
   if (token != undefined) {
@@ -212,10 +210,10 @@ app.get("/logout", function (req, res) {
 });
 
 // Returns a list of the users's rooms (spaces). Requires that the access token include the `spark:rooms_read` scope.
-// Uses the session's API token, if one exists, otherwise the user is redirected to the login page.
+// Uses the session's existing API token, if one exists, otherwise the user is redirected to the home page.
 //
 app.get("/listrooms", async function (req, res) {
-  // Read access token from session variable, if one exists. If not, send user to login page.
+  
   var token = req.session.token;
   if (token == undefined) {
     console.log(
@@ -223,11 +221,8 @@ app.get("/listrooms", async function (req, res) {
     );
     res.redirect("/");
   }
-
+  
   var listRoomsURL = "https://webexapis.com/v1/rooms";
-
-  // Retrieves a list of spaces (rooms) to which the user belongs.
-  // GET https://webexapis.com/v1/rooms
 
   const options = {
     method: "GET",
